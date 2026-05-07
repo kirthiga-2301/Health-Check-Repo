@@ -1,0 +1,31 @@
+# ============================================================
+#  Repo Health Checker — GitHub Actions Workflow
+#  Runs check.sh on every push to validate repository hygiene.
+# ============================================================
+
+name: Repo Health Check
+
+on:
+  push:
+    branches:
+      - '**'            # Trigger on pushes to any branch
+
+jobs:
+  health-check:
+    name: Run Health Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the full repository (all commits for message check)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Fetch full history so git log works
+
+      # 2. Make the script executable
+      - name: Grant execute permission
+        run: chmod +x check.sh
+
+      # 3. Run the health-check script
+      - name: Run check.sh
+        run: ./check.sh
